@@ -1,10 +1,11 @@
 def get_standings(soup):
     groups = soup.find_all('table', class_='wikitable2 standings')
+    classes = ['teamhighlight', 'teamhighlighter']
     standings = {'Group A': [], 'Group B': [], 'Group C': [], 'Group D': []}
     for group in groups:
         name = group.find('div').find_all(text=True, recursive=False)[0]
-        teams_tree = group.find_all(
-            'tr', class_='teamhighlight teamhighlighter')
+        teams_tree = group.find_all(lambda tag: tag.name == 'tr' and all(
+        class_ in tag.get('class', []) for class_ in classes))
         for team_tree in teams_tree:
             standings[name].append(get_informations(team_tree))
     return standings

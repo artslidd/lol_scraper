@@ -21,7 +21,7 @@ def initialize_teams(db, soup):
                 'losses': losses,
                 'name': name,
                 'group': group_name
-            }
+            }            
             db.collection('teams').document(contraction).set(data)
 
 def initialize_matches(db, soup):
