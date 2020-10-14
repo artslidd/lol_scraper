@@ -5,6 +5,7 @@ from pprint import pprint
 import requests
 from standings import get_standings
 from scheduler import get_schedule
+from datetime import datetime
 from config import initialize_app, name_to_contraction
 import time
 
@@ -44,10 +45,11 @@ def update_teams(db, soup):
     for match in schedule:
         if 'date' in match:
             docs = db.collection('matches').where('date', '==', match['date']).stream()
+            document_dict = {}
             for doc in docs:
                 id_ = doc.id
                 document_dict = doc.to_dict()
-            if document_dict['home'] != match['home'] and document_dict['away'] != match['away']:
+            if 'home' in document_dict and document_dict.get('home') != match['home'] and document_dict.get('away') != match['away']:
                 db.collection('matches').document(id_).update({'home': match['home'], 'away': match['away']})
 
 if __name__ == '__main__':
@@ -59,5 +61,5 @@ if __name__ == '__main__':
     soup = BeautifulSoup(worlds_html_file, 'html.parser')
     db = initialize_app()
 
-    initialize_teams(db, soup)
-    update_scores(db, soup)
+    # initialize_teams(db, soup)
+    update_teams(db, soup)

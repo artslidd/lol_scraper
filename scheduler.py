@@ -25,6 +25,7 @@ def get_matches(day):
     category = day.find('tr', class_="").find('th').find_all(text=True, recursive=False)[0]
     for row in matches_rows:
         team_1, date, team_2, score_home, score_away = get_match(row)
+
         matches.append({'home': team_1, 'away': team_2, 'date': date, 'category': category, 'score_home': score_home, 'score_away': score_away})
     return matches
 
